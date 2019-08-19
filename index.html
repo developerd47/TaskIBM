@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+ <script src="jquery.serializejson.js"></script>
+ 
+</head>
+<body>
+
+<h1>Search API</h1>
+<button class=" btn btn-primary" id="btn1">Get All Task </button>
+<button class=" btn btn-primary" id="btn2">Insert New Task</button>
+<button class=" btn btn-primary" id="btn3">Update Status</button>
+<button class=" btn btn-primary" id="btn4">Delete Task</button>
+<button class=" btn btn-primary" id="btn5">Get Task by id</button>
+<button class=" btn btn-primary" id="btn6">Overdue Task</button>
+<button class=" btn btn-primary" id="btn7">TaskDue Today AND/OR Tomorrow</button>
+<button class=" btn btn-primary" id="btn8">Completed Task</button>
+
+
+<div id="div1" style="display:none">
+<table class=" table table-bordered" style="width:100%" id="mytable">
+  <thead>
+    <th>Task Id</th>
+    <th>Name</th>
+    <th>Discription</th>
+    <th>Due Date</th>
+    <th>Status</th>  
+  </thead>
+  
+</table>
+</div>
+
+
+
+<div class="container"  id="div5" style="display:none">
+
+ 
+
+   <label for="name">Id</label>
+   <input type="text" id="id11" name="id" placeholder="id..">
+
+ <button class=" btn btn-primary" id="div5_id">Submit</button>
+<h3 id="pid"> </h3>
+
+</div>
+
+
+
+
+
+
+<div class="container"  id="div3" style="display:none">
+
+ 
+<form>
+    <label for="name">Id</label>
+    <input id="data" type="text" name="data" ><br>
+    <input id="submit" type="button"  value="Submit">
+</form>
+
+</div>
+
+
+<!--delete--->
+<div class="container"  id="div4" style="display:none">
+
+ 
+<form>
+    <label for="name">Id</label>
+    <input id="data1" type="text" name="data1" ><br>
+    <input id="submit1" type="button"  value="Submit">
+</form>
+
+</div>
+
+
+
+<div id="div6" style="display:none">
+<table class=" table table-bordered" style="width:100%" id="mytable4">
+  <tr>
+    <th>Task Id</th>
+    <th>Name</th>
+    <th>Discription</th>
+    <th>Due Date</th>
+    <th>Status</th>  
+  </tr>
+  
+</table>
+</div>
+
+
+<!--TaskDue--->
+<div id="div7" style="display:none">
+<table class=" table table-bordered" style="width:100%" id="mytable1">
+  <tr>
+    <th>Task Id</th>
+    <th>Name</th>
+    <th>Discription</th>
+    <th>Due Date</th>
+    <th>Status</th>  
+  </tr>
+  
+</table>
+</div>
+
+
+<!--CompletedTask--->
+<div id="div8" style="display:none">
+<table class=" table table-bordered" style="width:100%" id="mytable2">
+  <tr>
+    <th>Task Id</th>
+    <th>Name</th>
+    <th>Discription</th>
+    <th>Due Date</th>
+    <th>Status</th>   
+  </tr>
+  
+</table>
+</div>
+
+
+
+
+<div class="container"  id="div2" style="display:none">
+<h3>Contact Form</h3>
+
+  <form   name="myform" id="myform" action="http://127.0.0.1:8080/createtask" method="get">
+   <label for="name">Name</label>
+   <input type="text" id="name" name="name" placeholder="Your name..">
+
+   <label for="description">Description</label>
+   <input type="text" id="description" name="description" placeholder="Description..">
+
+   <label for="duedate">DueDate</label>
+   <input type="text" id="dueDate" name="dueDate" placeholder="Your duedate..">
+   
+
+ </form>
+<button type="submit" class="btn btn-success " id="submitform">Submit</button>
+</div>
+
+
+
+</body>
+</html>
+<script type="text/javascript">
+
+$("#btn2").click(function(){
+
+document.getElementById("div2").style.display = "block";
+Hidediv("div2")
+});
+
+$("#btn1").click(function(){
+document.getElementById("div1").style.display = "block";
+Hidediv("div1")
+$('#mytable').empty();
+document.getElementById("div1").style.display = "block";
+var apiUrl = 'http://127.0.0.1:8090/getAllTask/';
+    var data1=[];
+    var e_data='';
+    fetch(apiUrl).then(response => {
+      return response.json();
+    }).then(data => {
+     $.each(data,function(key,value){
+       
+       e_data +='<tr>';
+       e_data += '<td>'+value.id + '</td>' ;
+       e_data += '<td>'+value.name + '</td>' ;
+       e_data += '<td>'+value.description + '</td>' ;
+       e_data += '<td>'+value.dueDate + '</td>' ;
+       e_data += '<td>'+value.status + '</td>' ;
+       e_data +='</tr>';
+     });
+    $('#mytable').append(e_data);
+
+    }).catch(err => {
+
+    });
+});
+
+$(document).ready(function () {
+      $("#submitform").click(function (e) {
+          var MyForm = JSON.stringify($("#myform").serializeJSON());
+          console.log(MyForm);
+          $.ajax(
+              {
+                  url: "http://localhost:8080/createtask",
+                  type: "POST",
+                  data: MyForm,
+	         Accept : "application/json",
+             contentType: "application/json",
+              });
+          e.preventDefault(); 
+      });
+  });
+
+//===============================display by Id=====================
+$("#btn5").click(function(){
+
+document.getElementById("div5").style.display = "block";
+Hidediv("div5")
+
+$('#div5_id').click(function(){
+console.log("cclll");
+
+var id=document.getElementById("id11").value;
+console.log(id);
+
+var api_url = 'http://127.0.0.1:8080/getTaskById?id='+id;
+    var data1=[];
+    var e_data='';
+    fetch(api_url).then(response => {
+      return response.json();
+    }).then(data => {
+       var name=data.name;
+        var id=data.id;
+        var des=data.description;
+        var st=data.status;
+        var date=data.dueDate;
+        document.getElementById("pid").innerHTML="id : "+id+ "<br/>"+" name : "+name + "<br/>"+ " description : "+des + "<br/>" + " duedate :"+ date  + "<br/>"+" status :"+ st;
+ 
+    }).catch(err => {
+    });
+
+});
+});
+
+
+//===============================Update status=====================
+
+$("#btn3").click(function(){
+
+document.getElementById("div3").style.display = "block";
+Hidediv("div3")
+});
+
+
+
+$(document).ready(function() {
+            $('#submit').click(  function () {
+                console.log("click");
+                var sendData = $('#data').val();
+
+                $.ajax({
+                    url: 'http://127.0.0.1:8080/updateStatus?id='+sendData,    //Your api url
+                    type: 'PUT',
+                
+                       //type is any HTTP method
+                    data: {
+                        data: sendData
+                    },      //Data as js object
+                    success: function () {
+                    }
+                })
+                ;
+
+            });
+        });
+
+
+//==================================Delete=======================
+
+
+$("#btn4").click(function(){
+
+document.getElementById("div4").style.display = "block";
+Hidediv("div4")
+//submitformforupdate
+
+});
+
+
+
+$(document).ready(function() {
+            $('#submit1').click(  function () {
+                console.log("click1111");
+                var sendData = $('#data1').val();
+	        	console.log(sendData);
+
+                $.ajax({
+                    url: 'http://127.0.0.1:8080/deleteTaskById?id='+sendData,    //Your api url
+                    type: 'DELETE',
+                
+                       //type is any HTTP method
+                    data: {
+                        data: sendData
+                    },      //Data as js object
+                    success: function () {
+                    alert("Deleted")
+                    }
+                })
+                ;
+
+            });
+        });
+
+
+
+
+//==============================TaskDue=====================
+
+$("#btn7").click(function(){
+//display:block;
+document.getElementById("div7").style.display = "block";
+Hidediv("div7")
+//window.location.reload();
+//window.location.href=window.location.href;
+$('#mytable1').empty();
+var apiUrl = 'http://127.0.0.1:8080/getTaskDueTodayTomorrow';
+    var data1=[];
+    var e_data='';
+    fetch(apiUrl).then(response => {
+    return response.json();
+     
+    }).then(data => {
+console.log(data);
+     $.each(data,function(key,value){
+       
+       e_data +='<tr>';
+       e_data += '<td>'+value.id + '</td>' ;
+       e_data += '<td>'+value.name + '</td>' ;
+       e_data += '<td>'+value.description + '</td>' ;
+       e_data += '<td>'+value.dueDate + '</td>' ;
+       e_data += '<td>'+value.status + '</td>' ;
+       e_data +='</tr>';
+     });
+    $('#mytable1').append(e_data);
+  $('#mytable1').clear();
+  
+    
+    
+    }).catch(err => {
+      // Do something for an error here
+    });
+
+    });    
+
+
+
+//===========================================Completed Task======================
+
+
+$("#btn8").click(function(){
+//display:block;
+document.getElementById("div8").style.display = "block";
+Hidediv("div8")
+//window.location.reload();
+//window.location.href=window.location.href;
+$('#mytable2').empty();
+var apiUrl = 'http://127.0.0.1:8080/getCompletedTask';
+    var data1=[];
+    var e_data='';
+    fetch(apiUrl).then(response => {
+      return response.json();
+    }).then(data => {
+     $.each(data,function(key,value){
+       
+       e_data +='<tr>';
+       e_data += '<td>'+value.id + '</td>' ;
+       e_data += '<td>'+value.name + '</td>' ;
+       e_data += '<td>'+value.description + '</td>' ;
+       e_data += '<td>'+value.dueDate + '</td>' ;
+       e_data += '<td>'+value.status + '</td>' ;
+       e_data +='</tr>';
+     });
+    $('#mytable2').append(e_data);
+  $('#mytable2').clear();
+  
+    
+    
+    }).catch(err => {
+      // Do something for an error here
+    });
+
+
+//history.go(0);
+}); 
+
+
+//=========================OverDueTask================================
+
+
+$("#btn6").click(function(){
+//display:block;
+document.getElementById("div6").style.display = "block";
+Hidediv("div6")
+//window.location.reload();
+//window.location.href=window.location.href;
+$('#mytable4').empty();
+var apiUrl = 'http://127.0.0.1:8080/overdueTask';
+    var data1=[];
+    var e_data='';
+    fetch(apiUrl).then(response => {
+      return response.json();
+    }).then(data => {
+     $.each(data,function(key,value){
+       
+       e_data +='<tr>';
+       e_data += '<td>'+value.id + '</td>' ;
+       e_data += '<td>'+value.name + '</td>' ;
+       e_data += '<td>'+value.description + '</td>' ;
+       e_data += '<td>'+value.dueDate + '</td>' ;
+       e_data += '<td>'+value.status + '</td>' ;
+       e_data +='</tr>';
+     });
+    $('#mytable4').append(e_data);
+  $('#mytable4').clear();
+  
+    
+    
+    }).catch(err => {
+      // Do something for an error here
+    });
+
+
+//history.go(0);
+});
+
+function Hidediv(div_id) {
+ 
+if (div_id!="div1"){
+
+document.getElementById("div1").style.display = "none";
+}
+if (div_id!="div2"){
+document.getElementById("div2").style.display = "none";
+}
+if (div_id!="div3"){
+document.getElementById("div3").style.display = "none";
+}
+if (div_id!="div4"){
+document.getElementById("div4").style.display = "none";
+}
+if (div_id!="div5"){
+document.getElementById("div5").style.display = "none";}
+if (div_id!="div6"){
+document.getElementById("div6").style.display = "none";}
+if (div_id!="div7"){
+document.getElementById("div7").style.display = "none";}
+if (div_id!="div8"){
+document.getElementById("div8").style.display = "none";}
+
+}
+
+</script>
