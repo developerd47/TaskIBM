@@ -1,0 +1,21 @@
+To run the Application-
+
+-- Prerequisites
+ 1) Maven
+ 2) JAVA
+
+-- Database
+ 1) H2 (In-memory database)
+
+-- To Run
+ 1) mvn spring-boot:run
+
+-- To Run on Docker
+ 1) mvn clean package (generate jar file)
+ 2) docker build -t myapp .
+ 3) docker run -p 8080:8080 myapp
+
+-- For API documentation Swagger is used. To access documentation use "http://localhost:8080/swagger-ui.html#/main-controller"
+
+-- Description
+ This is a simple task management tool. The tool will allow an end user to create, manage and delete tasks using a web interface.
